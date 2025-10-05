@@ -1,5 +1,7 @@
 ﻿@page "/"
+@using System.Threading.Tasks
 @using cryptovalutchik.Components.Blocks;
+@using cryptovalutchik.Components.Types;
 @inject HttpClient client;
 <PageTitle>Cryptovalutchik</PageTitle>
 <!DOCTYPE html>
@@ -15,17 +17,29 @@
 
 <body>
     <div class="container">
-        <TickerFilter Tickers="tickers"/>
-        <CryptoList/>
+        <TickerFilter Tickers="tickers" OnAddTicker="OnAddTicker"/>
+        <CryptoList Cryptocurrencies="cryptocurrencies"/>
         <CryptoChart/>
     </div>
 </body>
 </html>
 
 @code{
-    private string[] tickers=[];
-    protected override async Task OnInitializedAsync()
-    {
-        tickers = await client.GetFromJsonAsync<string[]>("/cryptocurrency/tickers");
-    }
+	private string[] tickers=[];
+	private List<string> userTicker = [];
+	private Cryptocurrency[] cryptocurrencies=[];
+	protected override async Task OnInitializedAsync()
+	{
+		tickers = await client.GetFromJsonAsync<string[]>("/cryptocurrency/tickers");
+	}
+	private async Task OnAddTicker(string ticker)
+	{
+		userTicker.Add(ticker);
+		string query = "?";
+		foreach(var userTicker in userTicker)
+		{
+			query += $"tickers={userTicker}&";
+		}
+		cryptocurrencies = await client.GetFromJsonAsync<Cryptocurrency[]>($"/cryptocurrency{query}");
+	}
 }

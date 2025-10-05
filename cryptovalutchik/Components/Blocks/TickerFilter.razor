@@ -1,32 +1,62 @@
 ﻿<div class="ticker-section">
     <label for="ticker">Тикер</label>
     <div class="ticker-input">
-        <input type="text" id="ticker" placeholder="Например DOGE" />
+		<input @onkeydown="OnTickerEnter" @oninput="OnTickerInput" type="text" id="ticker" placeholder="Например DOGE" />
     </div>
 
     <div class="ticker-buttons">
         @foreach(var ticker in top5tickers)
         {
-            <button class="ticker-btn">@ticker</button>
+            <button class="ticker-btn" @onclick="_=>OnAddTicker.InvokeAsync(ticker)">@ticker</button>
         }
     </div>
 
-    <div class="error">
+    @* @ <div class="error">
         <i class="fa-solid fa-circle-exclamation"></i>
         Такой тикер уже добавлен
-    </div>
+    </div> *@
 
-    <button class="add-btn">
+    <button class="add-btn" @onclick="OnAddClick">
         <i class="fa-solid fa-plus"></i> Добавить
     </button>
 </div>
 @code {
-    [Parameter]
-    public string[] Tickers{ get; set; }
-    private string[] top5tickers = [];
-    protected override void OnParametersSet()
-    {
-        top5tickers = Tickers.Take(5).ToArray();
-    }
+	[Parameter]
+	public string[] Tickers{ get; set; }
 
+	[Parameter]
+	public EventCallback<string> OnAddTicker{ get; set; }
+
+	private string[] top5tickers = [];
+
+	private string inputText = "";
+
+	protected override void OnParametersSet()
+	{
+		top5tickers = Tickers.Take(5).ToArray();
+	}
+
+	private void OnTickerInput(ChangeEventArgs args)
+	{
+		if (args.Value != null)
+		{
+			string value = (string)args.Value;
+			inputText = value.ToUpper().Trim();
+
+			top5tickers=Tickers.Where(x => x.Contains(inputText)).Take(5).ToArray();
+		}
+	}
+
+	private async Task OnAddClick()
+	{
+		await OnAddTicker.InvokeAsync(inputText);
+	}
+
+	private async Task OnTickerEnter(KeyboardEventArgs args)
+	{
+		if (args.Key == "Enter")
+		{
+			await OnAddTicker.InvokeAsync(inputText);
+		}
+	}
 }

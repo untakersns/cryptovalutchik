@@ -1,0 +1,13 @@
+﻿<div class="card">
+    <h4>@Title - USD</h4>
+    <div class="value">@Math.Round(Rate, 2)</div>
+    <div class="remove-btn">
+        <i class="fa-solid fa-trash"></i> Удалить
+    </div>
+</div>
+@code {
+    [Parameter]
+    public string Title{ get; set; }
+    [Parameter]
+    public double Rate{ get; set; }
+}
