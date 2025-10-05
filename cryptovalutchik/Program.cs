@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped(client => new HttpClient {BaseAddress=new Uri("http://byteschool.online:3000/")});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

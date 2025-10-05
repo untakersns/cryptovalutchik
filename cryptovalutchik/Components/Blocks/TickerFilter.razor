@@ -1,0 +1,32 @@
+﻿<div class="ticker-section">
+    <label for="ticker">Тикер</label>
+    <div class="ticker-input">
+        <input type="text" id="ticker" placeholder="Например DOGE" />
+    </div>
+
+    <div class="ticker-buttons">
+        @foreach(var ticker in top5tickers)
+        {
+            <button class="ticker-btn">@ticker</button>
+        }
+    </div>
+
+    <div class="error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        Такой тикер уже добавлен
+    </div>
+
+    <button class="add-btn">
+        <i class="fa-solid fa-plus"></i> Добавить
+    </button>
+</div>
+@code {
+    [Parameter]
+    public string[] Tickers{ get; set; }
+    private string[] top5tickers = [];
+    protected override void OnParametersSet()
+    {
+        top5tickers = Tickers.Take(5).ToArray();
+    }
+
+}
