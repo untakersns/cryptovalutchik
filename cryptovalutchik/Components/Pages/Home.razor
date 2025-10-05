@@ -1,0 +1,99 @@
+﻿@page "/"
+<PageTitle>Cryptovalutchik</PageTitle>
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crypto Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="ticker-section">
+            <label for="ticker">Тикер</label>
+            <div class="ticker-input">
+                <input type="text" id="ticker" placeholder="Например DOGE" />
+            </div>
+
+            <div class="ticker-buttons">
+                <button class="ticker-btn">BTC</button>
+                <button class="ticker-btn">DOGE</button>
+                <button class="ticker-btn">BCH</button>
+                <button class="ticker-btn">CHD</button>
+            </div>
+
+            <div class="error">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                Такой тикер уже добавлен
+            </div>
+
+            <button class="add-btn">
+                <i class="fa-solid fa-plus"></i> Добавить
+            </button>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h4>WTF - USD</h4>
+                <div class="value">1.11</div>
+                <div class="remove-btn">
+                    <i class="fa-solid fa-trash"></i> Удалить
+                </div>
+            </div>
+            <div class="card">
+                <h4>VUE - RUB</h4>
+                <div class="value">80000.00</div>
+                <div class="remove-btn">
+                    <i class="fa-solid fa-trash"></i> Удалить
+                </div>
+            </div>
+            <div class="card">
+                <h4>BTC - USD</h4>
+                <div class="value">99999.99</div>
+                <div class="remove-btn">
+                    <i class="fa-solid fa-trash"></i> Удалить
+                </div>
+            </div>
+            <div class="card">
+                <h4>DOGE - USD</h4>
+                <div class="value">0.0014</div>
+                <div class="remove-btn">
+                    <i class="fa-solid fa-trash"></i> Удалить
+                </div>
+            </div>
+        </div>
+        <div class="chart">
+            <h3>VUE - USD</h3>
+            <div class="chart-bars">
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+                <div class="chart-bar"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
