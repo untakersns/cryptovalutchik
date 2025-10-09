@@ -1,0 +1,11 @@
+﻿@using cryptovalutchik.Components.Types
+<div class="chart-list">
+@foreach (var cryptocurrency in Cryptocurrencies)
+{
+    <CryptoChart TitleChart="@cryptocurrency.name"/>
+}
+</div>
+@code {
+    [Parameter]
+    public Cryptocurrency[] Cryptocurrencies { get; set; }
+}

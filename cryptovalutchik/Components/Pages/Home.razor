@@ -19,7 +19,7 @@
     <div class="container">
         <TickerFilter Tickers="tickers" OnAddTicker="OnAddTicker"/>
         <CryptoList Cryptocurrencies="cryptocurrencies"/>
-        <CryptoChart/>
+        <ChartList Cryptocurrencies="cryptocurrencies"/>
     </div>
 </body>
 </html>
@@ -28,9 +28,11 @@
 	private string[] tickers=[];
 	private List<string> userTicker = [];
 	private Cryptocurrency[] cryptocurrencies=[];
+	private Timer? _timer;
 	protected override async Task OnInitializedAsync()
 	{
 		tickers = await client.GetFromJsonAsync<string[]>("/cryptocurrency/tickers");
+		_timer = new Timer(async _ => await RefreshDataAsync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(3));
 	}
 	private async Task OnAddTicker(string ticker)
 	{
@@ -41,5 +43,10 @@
 			query += $"tickers={userTicker}&";
 		}
 		cryptocurrencies = await client.GetFromJsonAsync<Cryptocurrency[]>($"/cryptocurrency{query}");
+	}
+	private async Task RefreshDataAsync()
+	{
+		await InvokeAsync(StateHasChanged);
+		Console.Write("Обновление...");
 	}
 }

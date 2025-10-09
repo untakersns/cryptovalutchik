@@ -1,5 +1,5 @@
 ﻿<div class="chart">
-    <h3>VUE - USD</h3>
+    <h3>@TitleChart - USD</h3>
     <div class="chart-bars">
         <div class="chart-bar"></div>
         <div class="chart-bar"></div>
@@ -27,5 +27,6 @@
     </div>
 </div>
 @code {
-
+    [Parameter]
+    public string TitleChart { get; set; }
 }
