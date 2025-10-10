@@ -73,19 +73,19 @@ body {
 
 .add-btn {
     margin-top: 15px;
-    background: #4a90e2;
-    color: white;
+    background: white;
+    color: #4a3791;
     padding: 8px 15px;
-    border: none;
+    border: 2px solid #4a3791;
     border-radius: 5px;
     cursor: pointer;
     transition: 0.2s;
 }
 
     .add-btn:hover {
-        background: #3d7dc7;
+        background: #4a3791;
+        color:white;
     }
-
 .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -101,25 +101,31 @@ body {
     text-align: center;
     padding: 20px;
     position: relative;
+    transition: color 0.5s ease;
 }
-
+    .card:hover {
+        background-color: #4a3791;
+        color: white;
+    }
     .card .value {
         font-size: 22px;
         font-weight: 600;
         margin: 10px 0;
     }
 
-    .card .remove-btn {
-        color: #888;
+    .card .remove-btn button{
+        color: black;
         font-size: 14px;
         cursor: pointer;
         transition: 0.2s;
         display: inline-flex;
         align-items: center;
         gap: 4px;
+        background:transparent;
+        border:none;
     }
 
-        .card .remove-btn:hover {
+        .card .remove-btn:hover button{
             color: #e74c3c;
         }
 

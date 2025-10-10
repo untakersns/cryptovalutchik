@@ -102,7 +102,10 @@ body {
     padding: 20px;
     position: relative;
 }
-
+    .card:hover {
+        background-color: #4a3791;
+        color:white;
+    }
     .card .value {
         font-size: 22px;
         font-weight: 600;

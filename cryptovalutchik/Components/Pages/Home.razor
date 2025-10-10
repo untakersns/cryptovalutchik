@@ -32,7 +32,7 @@
     protected override async Task OnInitializedAsync()
     {
         tickers = await client.GetFromJsonAsync<string[]>("/cryptocurrency/tickers");
-        _timer = new Timer(async _ => await RefreshDataAsync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(3));
+        _timer = new Timer(async _ => await RefreshDataAsync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
     }
     private async Task OnAddTicker(string ticker)
     {
@@ -50,7 +50,6 @@
         {
             await FetchCryptoDataAsync();
             StateHasChanged();
-            Console.Write("sssss");
         }
     }
 

@@ -1,4 +1,5 @@
-﻿<div class="card">
+﻿@using cryptovalutchik.Components.Pages
+<div class="card">
     <h4>@Title - USD</h4>
     <div class="value">@Math.Round(Rate, 2)</div>
     <div class="remove-btn">
@@ -19,7 +20,7 @@
 
     private async Task OnRemoveClick()
     {
-        Console.Write($"Запрос на удаление {Ticker}");
+        Console.WriteLine($"Запрос на удаление {Ticker}");
         await OnRemoveRequest.InvokeAsync(Ticker);
     }
 }
