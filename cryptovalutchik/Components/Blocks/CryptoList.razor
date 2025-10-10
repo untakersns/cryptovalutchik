@@ -3,10 +3,16 @@
 <div class="cards">
     @foreach(var cryptocurrency in Cryptocurrencies)
     {
-        <CryptoCard Title="@cryptocurrency.name" Rate="cryptocurrency.rate" />
+        <CryptoCard Title="@cryptocurrency.name" Rate="cryptocurrency.rate" Ticker="@cryptocurrency.ticker" OnRemoveRequest="OnRemoveCryptoCard"/>
     }
 </div>
 @code {
     [Parameter]
     public Cryptocurrency[] Cryptocurrencies { get; set; }
+    [Parameter]
+    public EventCallback<string> OnRemoveCrypto { get; set; }
+    private async Task OnRemoveCryptoCard(string tickerToRemove)
+    {
+       await OnRemoveCrypto.InvokeAsync(tickerToRemove);
+    }
 }

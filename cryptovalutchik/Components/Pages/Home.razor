@@ -18,35 +18,62 @@
 <body>
     <div class="container">
         <TickerFilter Tickers="tickers" OnAddTicker="OnAddTicker"/>
-        <CryptoList Cryptocurrencies="cryptocurrencies"/>
+        <CryptoList Cryptocurrencies="cryptocurrencies" OnRemoveCrypto="OnRemoveTicker"/>
         <ChartList Cryptocurrencies="cryptocurrencies"/>
     </div>
 </body>
 </html>
 
 @code{
-	private string[] tickers=[];
-	private List<string> userTicker = [];
-	private Cryptocurrency[] cryptocurrencies=[];
-	private Timer? _timer;
-	protected override async Task OnInitializedAsync()
-	{
-		tickers = await client.GetFromJsonAsync<string[]>("/cryptocurrency/tickers");
-		_timer = new Timer(async _ => await RefreshDataAsync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(3));
-	}
-	private async Task OnAddTicker(string ticker)
-	{
-		userTicker.Add(ticker);
-		string query = "?";
-		foreach(var userTicker in userTicker)
-		{
-			query += $"tickers={userTicker}&";
-		}
-		cryptocurrencies = await client.GetFromJsonAsync<Cryptocurrency[]>($"/cryptocurrency{query}");
-	}
-	private async Task RefreshDataAsync()
-	{
-		await InvokeAsync(StateHasChanged);
-		Console.Write("Обновление...");
-	}
+    private string[] tickers=[];
+    private List<string> userTicker = [];
+    private Cryptocurrency[] cryptocurrencies=[];
+    private Timer? _timer;
+    protected override async Task OnInitializedAsync()
+    {
+        tickers = await client.GetFromJsonAsync<string[]>("/cryptocurrency/tickers");
+        _timer = new Timer(async _ => await RefreshDataAsync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(3));
+    }
+    private async Task OnAddTicker(string ticker)
+    {
+        if (!string.IsNullOrWhiteSpace(ticker) && !userTicker.Contains(ticker, StringComparer.OrdinalIgnoreCase))
+        {
+            userTicker.Add(ticker);
+            await FetchCryptoDataAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnRemoveTicker(string tickerToRemove)
+    {
+        if (userTicker.Remove(tickerToRemove))
+        {
+            await FetchCryptoDataAsync();
+            StateHasChanged();
+            Console.Write("sssss");
+        }
+    }
+
+    private async Task FetchCryptoDataAsync()
+    {
+        if (userTicker.Count == 0)
+        {
+            cryptocurrencies = Array.Empty<Cryptocurrency>();
+            return;
+        }
+
+        string query = "?" + string.Join("&", userTicker.Select(t => $"tickers=" + Uri.EscapeDataString(t)));
+        var result = await client.GetFromJsonAsync<Cryptocurrency[]>($"/cryptocurrency{query}");
+        cryptocurrencies = result ?? Array.Empty<Cryptocurrency>();
+    }
+
+    private async Task RefreshDataAsync()
+    {
+        if (userTicker.Count > 0)
+        {
+            await FetchCryptoDataAsync();
+        }
+        await InvokeAsync(StateHasChanged);
+        Console.WriteLine("Обновление...");
+    }
 }

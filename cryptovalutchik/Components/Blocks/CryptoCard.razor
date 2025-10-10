@@ -2,12 +2,24 @@
     <h4>@Title - USD</h4>
     <div class="value">@Math.Round(Rate, 2)</div>
     <div class="remove-btn">
+        <button @onclick="OnRemoveClick">
         <i class="fa-solid fa-trash"></i> Удалить
+        </button>
     </div>
 </div>
 @code {
     [Parameter]
     public string Title{ get; set; }
     [Parameter]
+    public string Ticker { get; set; }
+    [Parameter]
     public double Rate{ get; set; }
+    [Parameter]
+    public EventCallback<string>OnRemoveRequest{ get; set; }
+
+    private async Task OnRemoveClick()
+    {
+        Console.Write($"Запрос на удаление {Ticker}");
+        await OnRemoveRequest.InvokeAsync(Ticker);
+    }
 }
