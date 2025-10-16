@@ -18,8 +18,8 @@
 <body>
     <div class="container">
         <TickerFilter Tickers="tickers" OnAddTicker="OnAddTicker"/>
-        <CryptoList Cryptocurrencies="cryptocurrencies" OnRemoveCrypto="OnRemoveTicker"/>
-        <ChartList Cryptocurrencies="cryptocurrencies"/>
+        <CryptoList Cryptocurrencies="cryptocurrencies" OnRemoveCrypto="OnRemoveTicker" OnCryptoWithIdSelected="@(id => selectedTicker = id)" SelectedTicker="selectedTicker" />
+        <CryptoChart Values="data"/>
     </div>
 </body>
 </html>
@@ -29,18 +29,32 @@
     private List<string> userTicker = [];
     private Cryptocurrency[] cryptocurrencies=[];
     private Timer? _timer;
+    private Guid? selectedTicker = null;
+    private double[] data = [];
     protected override async Task OnInitializedAsync()
     {
         tickers = await client.GetFromJsonAsync<string[]>("/cryptocurrency/tickers");
-        _timer = new Timer(async _ => await RefreshDataAsync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(5));
+        _timer = new Timer(async _ =>
+            {
+                await LoadDataAsync();
+                await InvokeAsync(StateHasChanged);
+            },
+            null,
+            TimeSpan.FromSeconds(1),
+            TimeSpan.FromSeconds(1));
     }
     private async Task OnAddTicker(string ticker)
     {
         if (!string.IsNullOrWhiteSpace(ticker) && !userTicker.Contains(ticker, StringComparer.OrdinalIgnoreCase))
         {
             userTicker.Add(ticker);
+            string query = "?";
+            foreach (var userTicker in userTicker)
+            {
+                query += $"tickers={userTicker}&";
+            }
             await FetchCryptoDataAsync();
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -52,7 +66,34 @@
             StateHasChanged();
         }
     }
+    private async Task LoadDataAsync()
+    {
+        if (userTicker.Count == 0)
+        {
+            cryptocurrencies = Array.Empty<Cryptocurrency>();
+            selectedTicker = null; // безопасно сбрасываем выбор
+            data = Array.Empty<double>();
+            return;
+        }
 
+        if (selectedTicker != null && cryptocurrencies.Length != 0)
+        {
+            var crypto = cryptocurrencies.FirstOrDefault(x => x.id == selectedTicker);
+            if (crypto == null)
+            {
+                selectedTicker = cryptocurrencies.Length > 0 ? cryptocurrencies[0].id : (Guid?)null;
+                crypto = selectedTicker != null ? cryptocurrencies.FirstOrDefault(x => x.id == selectedTicker) : null;
+            }
+
+            if (crypto != null && !string.IsNullOrEmpty(crypto.ticker))
+            {
+                var value = await client.GetFromJsonAsync<double>($"/Cryptocurrency/{Uri.EscapeDataString(crypto.ticker)}");
+                var list = data?.ToList() ?? new List<double>();
+                list.Add(value);
+                data = list.ToArray();
+            }
+        }
+    }
     private async Task FetchCryptoDataAsync()
     {
         if (userTicker.Count == 0)

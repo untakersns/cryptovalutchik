@@ -3,7 +3,7 @@
 <div class="cards">
     @foreach(var cryptocurrency in Cryptocurrencies)
     {
-        <CryptoCard Title="@cryptocurrency.name" Rate="cryptocurrency.rate" Ticker="@cryptocurrency.ticker" OnRemoveRequest="OnRemoveCryptoCard"/>
+        <CryptoCard Title="@cryptocurrency.name" Rate="cryptocurrency.rate" Ticker="@cryptocurrency.ticker" OnRemoveRequest="OnRemoveCryptoCard" IsSelected="cryptocurrency.id == SelectedTicker" OnCryptoSelected="@(() => OnCryptoWithIdSelected.InvokeAsync(cryptocurrency.id))" />
     }
 </div>
 @code {
@@ -15,4 +15,9 @@
     {
        await OnRemoveCrypto.InvokeAsync(tickerToRemove);
     }
+    [Parameter]
+    public EventCallback<Guid> OnCryptoWithIdSelected { get; set; }
+
+    [Parameter]
+    public Guid? SelectedTicker { get; set; }
 }

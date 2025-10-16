@@ -1,32 +1,45 @@
 ﻿<div class="chart">
     <h3>@TitleChart - USD</h3>
     <div class="chart-bars">
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
-        <div class="chart-bar"></div>
+        @if (DrawValues.Length != 0)
+        {
+            @for (int i = 0; i < 20; i++)
+            {
+                if (DrawValues.Length - 1 >= i)
+                {
+                    <div class="chart-bar" style="height: @(DrawValues[i] + 15)%"><p style="color: white">@DrawValues[i]%</p></div>
+                }
+                else
+                {
+                    <div class="chart-bar" style="height: 0%"></div>
+                }
+            }
+        }
     </div>
 </div>
 @code {
     [Parameter]
     public string TitleChart { get; set; }
+    [Parameter]
+    public double[] Values { get; set; }
+
+    private int[] DrawValues = [];
+
+    protected override void OnParametersSet()
+    {
+        var last20Values = Values.Skip(Math.Max(0, Values.Length - 20)).ToArray();
+
+        if (last20Values.Length > 0)
+        {
+            DrawValues = new int[last20Values.Length];
+
+            var max = last20Values.Max();
+            var min = last20Values.Min();
+
+            for (int i = 0; i < last20Values.Length; i++)
+            {
+                DrawValues[i] = (int)Math.Round((last20Values[i] - min) / (max - min) * 85);
+            }
+        }
+    }
 }
